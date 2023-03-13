@@ -15,12 +15,6 @@ module.exports = {
             password: 'superone_stage!',
             database: 'quickdev2'
         },
-        local: {
-                host: 'localhost',
-                user: 'root',
-                password: 'root',
-                database: 'quickdev_game2'
-            }
         // game: {
         //     host: 'quickdev-cluster.cluster-cqg9f9ji0u3u.eu-west-2.rds.amazonaws.com',
         //     user: 'superone',
@@ -138,19 +132,4 @@ module.exports = {
           }
         };
     },
-
-    sqlConnLocal: function() {
-        const nodeEnv = process.env.NODE_ENV || "local";
-        console.log('Connecting with ::::: ', nodeEnv);
-        const connection = mysql.createConnection(this[nodeEnv].local);
-        return {
-          query( sql, args ) {
-            return util.promisify( connection.query )
-              .call( connection, sql, args );
-          },
-          close() {
-            return util.promisify( connection.end ).call( connection );
-          }
-        };
-    }
 }

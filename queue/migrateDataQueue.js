@@ -1,7 +1,6 @@
 const Queue = require('bull');
 const affiliateQueries = require("../queries/affiliate");
 const redis = require('../config/redis');
-const insertMigrateDataQueue = require('./insertMigrateDataQueue').insertMigrateDataQueue;
 const redisHandler = require('../handlers/redisHandler');
 
 const getMigrateDataQueue = new Queue('migrationData', {
@@ -28,7 +27,7 @@ getMigrateDataQueue.process(async (job, done) => {
         const trueFalseCount = await dbConnAffiliate.query(query);
         trueFalseCount[0].questionId = job.data.questionId;
         const insertQuery = affiliateQueries.insertQuestionStats(trueFalseCount[0].questionId, trueFalseCount[0].trueCount, trueFalseCount[0].falseCount);
-     	await dbConnLocal.query(insertQuery);
+     	await dbConnAffiliate.query(insertQuery);
 		await deleteRedisRecord(job);
 		done();
 		console.log(`**************JOB ID: ${job.id} MIGRATION DONE******************--->>>`);
